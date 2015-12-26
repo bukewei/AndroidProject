@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import org.json.JSONException;
@@ -48,6 +49,7 @@ public class SplashActivity extends Activity {
 	private static final int URL_ERROR = 3;// 地址错误
 	private static final int NETWORK_ERROR = 4;//网络错误
 	private static final int JSON_ERROR = 5;// json错误
+	private static final int SOCKET_TIMEOUT = 6;//连接网络超时
 
 	private String description;// 更新描述
 	private String version;
@@ -83,17 +85,20 @@ public class SplashActivity extends Activity {
 				break;
 			case URL_ERROR:
 				enterHome();
-				Toast.makeText(getApplicationContext(), "URL错误",0).show();
+				Toast.makeText(SplashActivity.this, "URL错误",0).show();
 				break;
 			case NETWORK_ERROR:
 				enterHome();
-				Toast.makeText(getApplicationContext(), "网络异常！",0).show();
+				Toast.makeText(SplashActivity.this, "网络异常！",0).show();
 				break;
 			case JSON_ERROR:
 				enterHome();
-				Toast.makeText(getApplicationContext(), "json解析错误！",0).show();
+				Toast.makeText(SplashActivity.this, "json解析错误！",0).show();
 				break;
-
+			case SOCKET_TIMEOUT:
+				enterHome();
+				Toast.makeText(SplashActivity.this, "连接网络超时！",0).show();
+				break;
 			default:
 				break;
 			}
@@ -114,7 +119,9 @@ public class SplashActivity extends Activity {
 					URL url = new URL(getString(R.string.serverurl));
 					HttpURLConnection conn=(HttpURLConnection) url.openConnection();
 					conn.setRequestMethod("GET");
-					conn.setReadTimeout(5000);
+					//setConnectTimeout和setReadTimeout都要设置,否则会堵塞线程
+					conn.setConnectTimeout(4000);
+					conn.setReadTimeout(4000);
 					int code=conn.getResponseCode();
 					if(code == 200){
 						InputStream iStream=conn.getInputStream();
@@ -141,13 +148,16 @@ public class SplashActivity extends Activity {
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 					msg.what=URL_ERROR;
-				} catch (IOException e) {
+				}catch (SocketTimeoutException  e) {
+					msg.what=SOCKET_TIMEOUT;
+					e.printStackTrace();
+				}catch (IOException e) {
 					e.printStackTrace();
 					msg.what=NETWORK_ERROR;
 				} catch (JSONException e) {
 					msg.what=JSON_ERROR;
 					e.printStackTrace();
-				}finally {
+				} finally {
 					long endTime=System.currentTimeMillis();
 					//运行了多少时间
 					long dTime=endTime-startTime;
@@ -165,17 +175,21 @@ public class SplashActivity extends Activity {
 				}
 			};
 		}.start();
+			
 
 	}
 	/**
 	 * 弹出升级对话框
 	 */
 	private void showUpdateDialong(){
+		//这里不能用getApplicationContext()
+		//getApplicationContext();生命周期长，只要应用还存活它就存在；
+		//  this 生命周期短，只要Activity不存在了，系统就会回收；  推荐用法:Activity.this
 		AlertDialog.Builder builder=new Builder(SplashActivity.this);
 		builder.setTitle("升级应用");
 		builder.setMessage(description);
 //		builder.setCancelable(false);//强制升级
-		//取消升级
+		//点击返回和空白处时
 		builder.setOnCancelListener(new OnCancelListener() {
 			
 			@Override
@@ -206,7 +220,7 @@ public class SplashActivity extends Activity {
 							//输出异常信息
 							t.printStackTrace();
 							Log.i(TAG, "下载失败:"+strMsg);
-							Toast.makeText(getApplicationContext(), "下载失败",0).show();
+							Toast.makeText(SplashActivity.this, "下载失败",0).show();
 						};
 						/**
 						 * 下载中
@@ -234,12 +248,13 @@ public class SplashActivity extends Activity {
 						};
 					});
 				}else{
-					Toast.makeText(getApplicationContext(), "没有找到SD卡，无法安装应用",0).show();
+					Toast.makeText(SplashActivity.this, "没有找到SD卡，无法安装应用",0).show();
 					return;
 				}
 				
 			}
 		});
+		//点击取消
 		builder.setNegativeButton("下次再说",new OnClickListener() {
 			
 			@Override
@@ -257,7 +272,7 @@ public class SplashActivity extends Activity {
 	 * 进入主界面
 	 */
 	private void enterHome() {
-		Intent intent=new Intent(this,HomeActivity.class);
+		Intent intent=new Intent(SplashActivity.this,HomeActivity.class);
 		startActivity(intent);
 		//关闭当前页面
 		finish();
