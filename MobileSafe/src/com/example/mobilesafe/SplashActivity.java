@@ -29,13 +29,13 @@ public class SplashActivity extends Activity {
 	private TextView tv_splash_version;
 	private static final String TAG = "SplashActivity";
 
-	private static final int SHOW_UPDATE_DIALOG = 1;// ÏÔÊ¾¸üĞÂ¶Ô»°¿ò
-	private static final int ENTER_HOME = 2;// ½øÈëÖ÷½çÃæ
-	private static final int URL_ERROR = 3;// µØÖ·´íÎó
-	private static final int NETWORK_ERROR = 4;// ÍøÂç´íÎó
-	private static final int JSON_ERROR = 5;// json´íÎó
+	private static final int SHOW_UPDATE_DIALOG = 1;//æ˜¾ç¤ºæ›´æ–°å¯¹è¯æ¡†
+	private static final int ENTER_HOME = 2;// è¿›å…¥ä¸»ç•Œé¢
+	private static final int URL_ERROR = 3;// åœ°å€é”™è¯¯
+	private static final int NETWORK_ERROR = 4;//ç½‘ç»œé”™è¯¯
+	private static final int JSON_ERROR = 5;// jsoné”™è¯¯
 
-	private String description;// ¸üĞÂÃèÊö
+	private String description;// æ›´æ–°æè¿°
 	private String apkurl;
 
 	@Override
@@ -43,7 +43,7 @@ public class SplashActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 		tv_splash_version = (TextView) findViewById(R.id.tv_splash_version);
-		tv_splash_version.setText("°æ±¾ºÅ£º" + getAppVersion());
+		tv_splash_version.setText("ç‰ˆæœ¬å·ï¼š" + getAppVersion());
 
 		checkUpdate();
 	}
@@ -52,20 +52,20 @@ public class SplashActivity extends Activity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case SHOW_UPDATE_DIALOG:
-				Log.i(TAG, "ÏÔÊ¾Éı¼¶µÄ¶Ô»°¿ò");
-				Toast.makeText(getApplicationContext(), "    ÓĞĞÂ°æ±¾£¡\r\n"+description,0).show();
+				Log.i(TAG, "æ˜¾ç¤ºå‡çº§çš„å¯¹è¯æ¡†");
+				Toast.makeText(getApplicationContext(), "    æœ‰æ–°ç‰ˆæœ¬ï¼\r\n"+description,0).show();
 				break;
 			case ENTER_HOME:
 
 				break;
 			case URL_ERROR:
-				Toast.makeText(getApplicationContext(), "URL´íÎó£¡",0).show();
+				Toast.makeText(getApplicationContext(), "URLé”™è¯¯",0).show();
 				break;
 			case NETWORK_ERROR:
-				Toast.makeText(getApplicationContext(), "ÍøÂçÒì³££¡",0).show();
+				Toast.makeText(getApplicationContext(), "ç½‘ç»œå¼‚å¸¸ï¼",0).show();
 				break;
 			case JSON_ERROR:
-				Toast.makeText(getApplicationContext(), "json½âÎö´íÎó£¡",0).show();
+				Toast.makeText(getApplicationContext(), "jsonè§£æé”™è¯¯ï¼",0).show();
 				break;
 
 			default:
@@ -75,10 +75,10 @@ public class SplashActivity extends Activity {
 	};
 
 	/**
-	 * ¼ì²éÉı¼¶
+	 * æ£€æŸ¥å‡çº§
 	 */
 	private void checkUpdate() {
-		// ·ÃÎÊÍøÂçµÄ²Ù×÷Ò»°ãÔÚ×ÓÏß³ÌÀï½øĞĞ
+		//è®¿é—®ç½‘ç»œçš„æ“ä½œä¸€èˆ¬åœ¨å­çº¿ç¨‹é‡Œè¿›è¡Œ 
 		new Thread() {
 			public void run() {
 				long startTime=System.currentTimeMillis();
@@ -94,18 +94,18 @@ public class SplashActivity extends Activity {
 						InputStream iStream=conn.getInputStream();
 						String result=StreamTools.readFromStream(iStream);
 						Log.i(TAG,"JSON:"+result);
-						//¿ªÊ¼½âÎöjson
+						//å¼€å§‹è§£æjson
 						JSONObject obj=new JSONObject(result);
-						//µÃµ½¸üĞÂĞÅÏ¢
+						//å¾—åˆ°æ›´æ–°ä¿¡æ¯
 						String version=(String) obj.get("version");
 						description=obj.getString("description");
 						apkurl=obj.getString("apkurl");
-						//Ğ£ÑéÊÇ·ñÓĞĞÂ°æ±¾
+						//æ ¡éªŒæ˜¯å¦æœ‰æ–°ç‰ˆæœ¬
 						if(getAppVersion().equals(version)){
-							//Ã»ÓĞĞÂ°æ±¾
+							//æ²¡æœ‰æ–°ç‰ˆæœ¬
 							msg.what=ENTER_HOME;
 						}else{
-							//ÓĞĞÂ°æ±¾£¬µ¯³öÉı¼¶¶Ô»°¿ò
+							//æœ‰æ–°ç‰ˆæœ¬ï¼Œå¼¹å‡ºå‡çº§å¯¹è¯æ¡†
 							msg.what=SHOW_UPDATE_DIALOG;
 						}
 						
@@ -113,26 +113,22 @@ public class SplashActivity extends Activity {
 					}
 					
 				} catch (MalformedURLException e) {
-					// TODO ×Ô¶¯Éú³ÉµÄ catch ¿é
 					e.printStackTrace();
 					msg.what=URL_ERROR;
 				} catch (IOException e) {
-					// TODO ×Ô¶¯Éú³ÉµÄ catch ¿é
 					e.printStackTrace();
 					msg.what=NETWORK_ERROR;
 				} catch (JSONException e) {
-					// TODO ×Ô¶¯Éú³ÉµÄ catch ¿é
 					msg.what=JSON_ERROR;
 					e.printStackTrace();
 				}finally {
 					long endTime=System.currentTimeMillis();
-					//»¨ÁË¶àÉÙÊ±¼ä
+					//å¤šå°‘æ—¶é—´
 					long dTime=endTime-startTime;
 					if(dTime < 2000){
 						try {
 							Thread.sleep(2000-dTime);
 						} catch (InterruptedException e) {
-							// TODO ×Ô¶¯Éú³ÉµÄ catch ¿é
 							e.printStackTrace();
 						}
 					}
@@ -150,7 +146,6 @@ public class SplashActivity extends Activity {
 			PackageInfo info = pManager.getPackageInfo(getPackageName(), 0);
 			return info.versionName;
 		} catch (NameNotFoundException e) {
-			// TODO ×Ô¶¯Éú³ÉµÄ catch ¿é
 			e.printStackTrace();
 			return null;
 		}

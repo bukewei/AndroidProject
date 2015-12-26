@@ -8,10 +8,10 @@ import java.io.InputStream;
 public class StreamTools {
 	
 	/**
-	 * °ÑÊäÈëÁ÷×ª»¯³É×Ö·û´®
-	 * @param iStream ÊäÈëÁ÷
-	 * @return String ·µ»ØµÄ×Ö·û´®
-	 * @throws IOException Å×³öÒì³£
+	 * æŠŠè¾“å…¥æµè½¬åŒ–æˆå­—ç¬¦ä¸²
+	 * @param iStream è¾“å…¥æµ
+	 * @return String è¿”å›çš„å­—ç¬¦ä¸²
+	 * @throws IOException æŠ›å‡ºå¼‚å¸¸
 	 */
 	public static String readFromStream(InputStream iStream) throws IOException{
 		ByteArrayOutputStream baos=new ByteArrayOutputStream();
