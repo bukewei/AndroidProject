@@ -1,5 +1,6 @@
 package com.example.mobilesafe;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -12,21 +13,34 @@ import org.json.JSONObject;
 import com.example.mobilesafe.utils.StreamTools;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
 
 public class SplashActivity extends Activity {
 
 	private TextView tv_splash_version;
+	private TextView tv_update_info;
 	private static final String TAG = "SplashActivity";
 
 	private static final int SHOW_UPDATE_DIALOG = 1;//显示更新对话框
@@ -36,6 +50,7 @@ public class SplashActivity extends Activity {
 	private static final int JSON_ERROR = 5;// json错误
 
 	private String description;// 更新描述
+	private String version;
 	private String apkurl;
 
 	@Override
@@ -43,9 +58,16 @@ public class SplashActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 		tv_splash_version = (TextView) findViewById(R.id.tv_splash_version);
+		tv_update_info = (TextView) findViewById(R.id.tv_update_info);
 		tv_splash_version.setText("版本号：" + getAppVersion());
 
 		checkUpdate();
+		
+		
+		//动画透明效果   (半透明到不透明)
+		AlphaAnimation animation=new AlphaAnimation(0.2f,1f);
+		animation.setDuration(500);
+		findViewById(R.id.rl_root_splash).startAnimation(animation);
 	}
 
 	private Handler handler = new Handler() {
@@ -53,18 +75,22 @@ public class SplashActivity extends Activity {
 			switch (msg.what) {
 			case SHOW_UPDATE_DIALOG:
 				Log.i(TAG, "显示升级的对话框");
-				Toast.makeText(getApplicationContext(), "    有新版本！\r\n"+description,0).show();
+	//			Toast.makeText(getApplicationContext(), "    有新版本！\r\n"+description,0).show();
+				showUpdateDialong();
 				break;
 			case ENTER_HOME:
-
+				enterHome();
 				break;
 			case URL_ERROR:
+				enterHome();
 				Toast.makeText(getApplicationContext(), "URL错误",0).show();
 				break;
 			case NETWORK_ERROR:
+				enterHome();
 				Toast.makeText(getApplicationContext(), "网络异常！",0).show();
 				break;
 			case JSON_ERROR:
+				enterHome();
 				Toast.makeText(getApplicationContext(), "json解析错误！",0).show();
 				break;
 
@@ -97,7 +123,7 @@ public class SplashActivity extends Activity {
 						//开始解析json
 						JSONObject obj=new JSONObject(result);
 						//得到更新信息
-						String version=(String) obj.get("version");
+						version=(String) obj.get("version");
 						description=obj.getString("description");
 						apkurl=obj.getString("apkurl");
 						//校验是否有新版本
@@ -123,10 +149,12 @@ public class SplashActivity extends Activity {
 					e.printStackTrace();
 				}finally {
 					long endTime=System.currentTimeMillis();
-					//多少时间
+					//运行了多少时间
 					long dTime=endTime-startTime;
 					if(dTime < 2000){
 						try {
+							//睡眠  2秒减去运行的时间
+							//两秒后进入主界面
 							Thread.sleep(2000-dTime);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
@@ -139,10 +167,110 @@ public class SplashActivity extends Activity {
 		}.start();
 
 	}
-
+	/**
+	 * 弹出升级对话框
+	 */
+	private void showUpdateDialong(){
+		AlertDialog.Builder builder=new Builder(SplashActivity.this);
+		builder.setTitle("升级应用");
+		builder.setMessage(description);
+//		builder.setCancelable(false);//强制升级
+		//取消升级
+		builder.setOnCancelListener(new OnCancelListener() {
+			
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				dialog.dismiss();
+				//进入主界面
+				enterHome();
+			}
+		});
+		
+		//点击确定
+		builder.setPositiveButton("立即升级",new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				//下载apk，并替换安装
+				//判断SD卡是否存在
+				if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+					//使用afnal-0.5.1
+					FinalHttp finalHttp=new FinalHttp();
+					String downFileName= Environment.getExternalStorageDirectory().getAbsolutePath()+"/mobilesafe"+version+".apk";
+					Log.i(TAG, "保存路径:"+downFileName);
+					finalHttp.download(apkurl,downFileName,new AjaxCallBack<File>() {
+						/**
+						 * 下载失败
+						 */
+						public void onFailure(Throwable t, int errorNo, String strMsg) {
+							//输出异常信息
+							t.printStackTrace();
+							Log.i(TAG, "下载失败:"+strMsg);
+							Toast.makeText(getApplicationContext(), "下载失败",0).show();
+						};
+						/**
+						 * 下载中
+						 */
+						public void onLoading(long count, long current) {
+							//设置为可见
+							tv_update_info.setVisibility(View.VISIBLE);
+							//下载的百分比
+							int progress=(int) ((current*100)/count);
+							tv_update_info.setText("下载进度："+progress+"%");
+						};
+						/**
+						 * 下载成功
+						 */
+						public void onSuccess(File t) {
+							installAPK(t);
+						}
+						//安装APK
+						private void installAPK(File t) {
+							Intent intent=new Intent();
+							intent.setAction("android.intent.action.VIEW");
+							intent.addCategory("android.intent.category.DEFAULT");
+							intent.setDataAndType(Uri.fromFile(t),"application/vnd.android.package-archive");
+							startActivity(intent);
+						};
+					});
+				}else{
+					Toast.makeText(getApplicationContext(), "没有找到SD卡，无法安装应用",0).show();
+					return;
+				}
+				
+			}
+		});
+		builder.setNegativeButton("下次再说",new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// 销毁对话框
+				dialog.dismiss();
+				enterHome();
+			}
+		});
+		//显示
+		builder.show();	
+	}
+	
+	/**
+	 * 进入主界面
+	 */
+	private void enterHome() {
+		Intent intent=new Intent(this,HomeActivity.class);
+		startActivity(intent);
+		//关闭当前页面
+		finish();
+	}
+	
+	/**
+	 * 获取应用版本号
+	 * @return
+	 */
 	public String getAppVersion() {
 		PackageManager pManager = getPackageManager();
 		try {
+			//获取apk的功能清单文件
 			PackageInfo info = pManager.getPackageInfo(getPackageName(), 0);
 			return info.versionName;
 		} catch (NameNotFoundException e) {

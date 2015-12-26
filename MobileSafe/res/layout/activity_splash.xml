@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_root_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/splash_view"
@@ -12,12 +13,31 @@
     <!-- shadow：阴影 -->
 
     <TextView
+        android:id="@+id/tv_update_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="下载进度：0%"
+        android:textColor="#000000"
+        android:textSize="20sp"
+         android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="132dp" />
+
+    <TextView
         android:id="@+id/tv_splash_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/progressBar2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="121dp"
+        android:layout_marginBottom="104dp"
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="1"
@@ -25,13 +45,5 @@
         android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold" />
-
-    <ProgressBar
-        android:id="@+id/progressBar2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_splash_version"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp" />
 
 </RelativeLayout>
