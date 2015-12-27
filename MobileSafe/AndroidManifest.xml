@@ -26,8 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.mobilesafe.HomeActivity" >
-        </activity>
+        <activity android:name="com.example.mobilesafe.HomeActivity" />
+        <activity android:name="com.example.mobilesafe.SettingActivity" />
     </application>
 
 </manifest>

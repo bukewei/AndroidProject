@@ -20,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -63,7 +64,23 @@ public class SplashActivity extends Activity {
 		tv_update_info = (TextView) findViewById(R.id.tv_update_info);
 		tv_splash_version.setText("版本号：" + getAppVersion());
 
-		checkUpdate();
+		 SharedPreferences sp=getSharedPreferences("config",MODE_PRIVATE);
+		//获取升级设置
+		boolean update=sp.getBoolean("update",true);
+		
+		if(update){
+			//检查新版本并升级
+			checkUpdate();
+		}else{
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					// 进入主页面
+					enterHome();
+				}
+			}, 2000);
+		}
+		
 		
 		
 		//动画透明效果   (半透明到不透明)
