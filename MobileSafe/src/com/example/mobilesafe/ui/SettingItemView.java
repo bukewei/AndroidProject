@@ -14,6 +14,9 @@ public class SettingItemView extends RelativeLayout {
 	private TextView tv_title;
 	private TextView tv_desc;
 	
+	private String desc_on;
+	private String desc_off;
+	
 	/**
 	 * 初始化布局文件
 	 * @param context 上下文
@@ -38,6 +41,11 @@ public class SettingItemView extends RelativeLayout {
 	 * @param checked
 	 */
 	public void setChecked(boolean checked) {
+		if(checked){
+			setDesc(desc_on);
+		}else{
+			setDesc(desc_off);
+		}
 		cb_status.setChecked(checked);
 	}
 	/**
@@ -73,11 +81,25 @@ public class SettingItemView extends RelativeLayout {
 		iniView(context);
 	}
 
+	/**
+	 * 带有两个参数的构造方法是在布局文件使用的时候调用
+	 * @param context
+	 * @param attrs
+	 */
 	public SettingItemView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		iniView(context);
+		String title=attrs.getAttributeValue("http://schemas.android.com/apk/res/com.example.mobilesafe", "title");
+		desc_on=attrs.getAttributeValue("http://schemas.android.com/apk/res/com.example.mobilesafe", "desc_on");
+		desc_off=attrs.getAttributeValue("http://schemas.android.com/apk/res/com.example.mobilesafe", "desc_off");
+		tv_title.setText(title);
+		setDesc(desc_off);
 	}
 
+	/**
+	 * 只有一个参数的构造方法是在new一个控件的时候调用
+	 * @param context
+	 */
 	public SettingItemView(Context context) {
 		super(context);
 		iniView(context);

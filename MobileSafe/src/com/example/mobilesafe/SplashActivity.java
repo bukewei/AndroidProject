@@ -72,6 +72,7 @@ public class SplashActivity extends Activity {
 			//检查新版本并升级
 			checkUpdate();
 		}else{
+			//延迟两秒进入主页面
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {

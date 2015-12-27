@@ -27,12 +27,12 @@ public class SettingActivity extends Activity {
 		if(update){
 			//自动升级开启
 			siv_update.setChecked(update);
-			siv_update.setDesc(update);
+	//		siv_update.setDesc(update);
 		}else{
 			//自动升级已关闭
-//			siv_update.setChecked(update);
+			siv_update.setChecked(update);
 //			siv_update.setDesc(update);
-			siv_update.setStatus(update);
+//			siv_update.setStatus(update);
 		}
 		
 		siv_update.setOnClickListener(new OnClickListener() {
@@ -43,15 +43,15 @@ public class SettingActivity extends Activity {
 				//判断是否打开自动升级
 				if(siv_update.isChecked()){
 					//已经打开了自动升级，现在关闭
-//					siv_update.setChecked(false);
+					siv_update.setChecked(false);
 //					siv_update.setDesc(false);
-					siv_update.setStatus(false);
+//					siv_update.setStatus(false);
 					editor.putBoolean("update",false);
 				}else{
 					//没有打开自动升级，现在打开
-//					siv_update.setChecked(true);
+					siv_update.setChecked(true);
 //					siv_update.setDesc(true);
-					siv_update.setStatus(true);
+//					siv_update.setStatus(true);
 					editor.putBoolean("update",true);
 				}
 				//提交
