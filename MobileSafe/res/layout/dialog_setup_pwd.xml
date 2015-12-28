@@ -39,11 +39,12 @@
             android:layout_width="140dip"
             android:layout_height="wrap_content"
             android:text="确定" />
-        <Button 
+
+        <Button
             android:id="@+id/cancel"
             android:layout_width="140dip"
             android:layout_height="wrap_content"
-            android:text="取消"/>
+            android:text="取消" />
     </LinearLayout>
 
 </LinearLayout>
