@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ithema="http://schemas.android.com/apk/res/com.example.mobilesafe"
+    xmlns:itheima="http://schemas.android.com/apk/res/com.example.mobilesafe"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -17,9 +17,9 @@
 
     <!-- 自定义属性：在values文件夹下的attr.xml文件里定义 -->
     <com.example.mobilesafe.ui.SettingItemView
-        ithema:title="设置自动更新"
-        ithema:desc_on="设置自动更新已经开启"
-        ithema:desc_off="设置自动更新已经关闭"
+        itheima:title="设置自动更新"
+        itheima:desc_on="设置自动更新已经开启"
+        itheima:desc_off="设置自动更新已经关闭"
         android:id="@+id/siv_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

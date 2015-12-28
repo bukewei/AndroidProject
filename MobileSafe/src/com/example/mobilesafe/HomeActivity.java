@@ -85,7 +85,15 @@ public class HomeActivity extends Activity {
 			showSetupPwdDialong();
 		}
 	}
-	
+	/**
+	 * 打开手机防盗页面
+	 */
+	public void enterLostFind(){
+		Intent intent=new Intent(HomeActivity.this,LostFindActivity.class);
+		startActivity(intent);
+		//HomeActivity暂时不能销毁，否则返回时会直接进入桌面
+//		finish();
+	}
 	private EditText et_setup_pwd;
 	private EditText et_setup_confirm;
 	private Button ok;
@@ -115,6 +123,11 @@ public class HomeActivity extends Activity {
 			public void onClick(View v) {
 				// 取出输入框密码
 				String pwd=et_setup_pwd.getText().toString().trim();
+				if(TextUtils.isEmpty(pwd)){
+					Toast.makeText(HomeActivity.this,"密码不能为空！",0).show();
+					Log.i(TAG,"密码不能为空！");
+					return;
+				}
 				//进行加密，然后比较保存的密码
 				pwd=MD5Utils.Md5Pwd(pwd);
 				String savePwd=sp.getString("password","");
@@ -127,9 +140,9 @@ public class HomeActivity extends Activity {
 					dialog.dismiss();
 					//密码一致进入手机防盗页面
 					Log.i(TAG,"密码一致进入手机防盗页面");
-					Toast.makeText(HomeActivity.this,"密码正确！",0).show();
+//					Toast.makeText(HomeActivity.this,"密码正确！",0).show();
 					//进入手机防盗页面
-					
+					enterLostFind();
 				}else {
 					Toast.makeText(HomeActivity.this,"密码错误！",0).show();
 					Log.i(TAG,"密码错误！");
@@ -189,7 +202,7 @@ public class HomeActivity extends Activity {
 					//把对话框销毁
 					dialog.dismiss();
 					//进入手机防盗页面
-					
+					enterLostFind();
 					
 				}else{
 					//不一致

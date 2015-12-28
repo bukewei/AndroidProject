@@ -28,6 +28,11 @@
         </activity>
         <activity android:name="com.example.mobilesafe.HomeActivity" />
         <activity android:name="com.example.mobilesafe.SettingActivity" />
+        <activity android:name="com.example.mobilesafe.LostFindActivity" />
+        <activity android:name="com.example.mobilesafe.Setup1Activity" />
+        <activity android:name="com.example.mobilesafe.Setup2Activity" />
+        <activity android:name="com.example.mobilesafe.Setup3Activity" />
+        <activity android:name="com.example.mobilesafe.Setup4Activity" />
     </application>
 
 </manifest>
