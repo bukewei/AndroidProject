@@ -1,5 +1,7 @@
 package com.example.mobilesafe;
 
+import com.example.mobilesafe.utils.MD5Utils;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -113,6 +115,8 @@ public class HomeActivity extends Activity {
 			public void onClick(View v) {
 				// 取出输入框密码
 				String pwd=et_setup_pwd.getText().toString().trim();
+				//进行加密，然后比较保存的密码
+				pwd=MD5Utils.Md5Pwd(pwd);
 				String savePwd=sp.getString("password","");
 				if(TextUtils.isEmpty(pwd)){
 					Toast.makeText(HomeActivity.this,"密码不能为空！",0).show();
@@ -123,10 +127,12 @@ public class HomeActivity extends Activity {
 					dialog.dismiss();
 					//密码一致进入手机防盗页面
 					Log.i(TAG,"密码一致进入手机防盗页面");
+					Toast.makeText(HomeActivity.this,"密码正确！",0).show();
 					//进入手机防盗页面
 					
 				}else {
 					Toast.makeText(HomeActivity.this,"密码错误！",0).show();
+					Log.i(TAG,"密码错误！");
 					return;
 				}
 				
@@ -175,6 +181,8 @@ public class HomeActivity extends Activity {
 				if (password.equals(pwd_confirm)) {
 					//一致
 					Editor editor=sp.edit();
+					//加密密码然后保存
+					password=MD5Utils.Md5Pwd(password);
 					editor.putString("password",password);
 					editor.commit();
 					Log.i(TAG,"密码一致，保存密码进入手机防盗页面");
