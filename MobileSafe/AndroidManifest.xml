@@ -12,6 +12,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 接收开机广播权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:allowBackup="true"
@@ -34,6 +37,16 @@
         <activity android:name="com.example.mobilesafe.Setup2Activity" />
         <activity android:name="com.example.mobilesafe.Setup3Activity" />
         <activity android:name="com.example.mobilesafe.Setup4Activity" />
+        <activity android:name="com.example.mobilesafe.SelectContactActivity" />
+        
+        <receiver 
+            android:name="com.example.mobilesafe.receiver.BootCompleteReceiver">
+            <intent-filter>
+                <!-- 接收开机广播 -->
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        
     </application>
 
 </manifest>

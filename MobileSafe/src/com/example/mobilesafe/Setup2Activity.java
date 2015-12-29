@@ -17,15 +17,14 @@ public class Setup2Activity extends BaseSetupActivity {
 	private SettingItemView siv_setup2_sim;
 	//电话管理者
 	private TelephonyManager tm;
-	private SharedPreferences sp;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
+		// super.onCreate(savedInstanceState);执行父类的onCreate方法
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setup2);
 		
-		sp=getSharedPreferences("config",MODE_PRIVATE);
 		siv_setup2_sim=(SettingItemView) findViewById(R.id.siv_setup2_sim);
 		tm=(TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		String sim=sp.getString("sim",null);
