@@ -18,11 +18,13 @@ public class Setup3Activity extends Activity {
 		Intent intent=new Intent(this,Setup2Activity.class);
 		startActivity(intent);
 		finish();
+		overridePendingTransition(R.anim.tran_pre_in,R.anim.tran_pre_out);
 	}
 
 	public void next(View view) {
 		Intent intent=new Intent(this,Setup4Activity.class);
 		startActivity(intent);
 		finish();
+		overridePendingTransition(R.anim.tran_in,R.anim.tran_out);
 	}
 }

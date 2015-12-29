@@ -27,14 +27,13 @@ public class LostFindActivity extends Activity {
 		
 	}
 	
-	
-	private void reEnterSetup(View view){
-		
+	/**
+	 * TextView点击事件    重新进入设置向导
+	 * @param view
+	 */
+	public void reEnterSetup(View view){
+		enterSetup();
 	}
-	
-	
-	
-	
 	
 	
 	/**
