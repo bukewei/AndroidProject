@@ -1,10 +1,16 @@
 package com.example.mobilesafe.receiver;
 
+import com.example.mobilesafe.R;
+import com.example.mobilesafe.service.GPSService;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,10 +40,30 @@ public class SMSReceiver extends BroadcastReceiver {
 				if("#*location*#".equals(body)){
 					Log.i(TAG, "----得到手机的GPS------");
 					Toast.makeText(context, "----得到手机的GPS------", 0).show();
+					//启动获取位置的服务
+					Intent GpsIntent=new Intent(context, GPSService.class);
+					context.startService(GpsIntent);
+					SharedPreferences sp=context.getSharedPreferences("config",Context.MODE_PRIVATE);
+					String lastlocation=sp.getString("lastlocation",null);
+					if(TextUtils.isEmpty(lastlocation)){
+						//位置没有得到
+						SmsManager.getDefault().sendTextMessage(sender,null,"没有得到位置信息",null,null);
+						System.out.println("短信内容：没有得到位置信息");
+					}else{
+						//发送位置信息
+						SmsManager.getDefault().sendTextMessage(sender,null,lastlocation,null,null);
+						System.out.println("短信内容："+lastlocation);
+					}
 					//终止广播
 					abortBroadcast();
 				}else if("#*alarm*#".equals(body)){
 					Log.i(TAG, "----播放报警音乐------");
+					MediaPlayer player=MediaPlayer.create(context, R.raw.ylzs);
+					//是否循环播放
+					player.setLooping(false);
+					//左右声道的音量
+					player.setVolume(1.0f,1.0f);
+					player.start();
 					
 					//终止广播
 					abortBroadcast();
