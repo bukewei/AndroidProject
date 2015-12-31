@@ -45,6 +45,8 @@
         <activity android:name="com.example.mobilesafe.Setup3Activity" />
         <activity android:name="com.example.mobilesafe.Setup4Activity" />
         <activity android:name="com.example.mobilesafe.SelectContactActivity" />
+        <activity android:name="com.example.mobilesafe.AtoolsActivity" />
+        <activity android:name="com.example.mobilesafe.NumberAddressQueryActivity" />
         
         <receiver 
             android:name="com.example.mobilesafe.receiver.BootCompleteReceiver">

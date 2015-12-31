@@ -1,6 +1,7 @@
 package com.example.mobilesafe;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -67,6 +68,9 @@ public class SplashActivity extends Activity {
 		 SharedPreferences sp=getSharedPreferences("config",MODE_PRIVATE);
 		//获取升级设置
 		boolean update=sp.getBoolean("update",true);
+		
+		//拷贝数据库
+		copyDB();
 		
 		if(update){
 			//检查新版本并升级
@@ -312,23 +316,37 @@ public class SplashActivity extends Activity {
 		}
 
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.splash, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+	
+	/**
+	 *  path 把address.db这个数据库拷贝到data/data/《包名》/files/address.db
+	 */
+	private void copyDB(){
+		
+		try {
+			File file=new File(getFilesDir(),"address.db");
+			//如果文件存在，并且长度大于0
+			if(file.exists() && file.length() > 0){
+				Log.i(TAG, "文件已存在，不需要拷贝了");
+			}else{
+			
+				InputStream is=getAssets().open("address.db");
+				FileOutputStream fos=new FileOutputStream(file);
+				byte[] buffer=new byte[1024];
+				int len=0;
+				while((len=is.read(buffer)) != -1){
+					fos.write(buffer,0,len);
+				}
+				is.close();
+				fos.close();
+			}
+			
+		} catch (IOException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
 		}
-		return super.onOptionsItemSelected(item);
+			
 	}
+	
+
+
 }
