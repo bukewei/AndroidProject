@@ -35,7 +35,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dip"
             android:layout_marginTop="8dip"
-            android:text="还没有设置"
+            android:text="空"
             android:textColor="#000000"
             android:textSize="20sp" />
     </RelativeLayout>
@@ -97,6 +97,25 @@
         android:background="#44000000" />
 
     <TextView
+        android:id="@+id/tv_shebei"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginTop="8dip"
+        android:background="@drawable/shape_selector"
+        android:clickable="true"
+        android:onClick="openAdmin"
+        android:text="打开设备管理"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.2dip"
+        android:layout_marginTop="10dip"
+        android:background="#44000000" />
+
+    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dip"
@@ -106,28 +125,24 @@
         android:textColor="#000000"
         android:textSize="20sp" />
 
-    <TextView 
+    <TextView
         style="@style/text_content_style"
         android:drawableLeft="@android:drawable/star_big_on"
-        android:text="GPS追踪：#*location*#"/>
-   <TextView 
+        android:text="GPS追踪：#*location*#" />
+
+    <TextView
         style="@style/text_content_style"
         android:drawableLeft="@android:drawable/star_big_on"
-        android:text="播放报警音乐：#*aiarm*#"/>
-   <TextView 
+        android:text="播放报警音乐：#*aiarm*#" />
+
+    <TextView
         style="@style/text_content_style"
         android:drawableLeft="@android:drawable/star_big_on"
-        android:text="远程数据销毁：#*wipedata*#"/>
-   <TextView 
+        android:text="远程数据销毁：#*wipedata*#" />
+
+    <TextView
         style="@style/text_content_style"
         android:drawableLeft="@android:drawable/star_big_on"
-        android:text="远程锁屏：#*lockscreen*#"/>
-    
-    
-    
-    
-    
-    
-    
-    
+        android:text="远程锁屏：#*lockscreen*#" />
+
 </LinearLayout>

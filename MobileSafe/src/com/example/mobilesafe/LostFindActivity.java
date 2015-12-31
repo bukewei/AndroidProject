@@ -1,6 +1,12 @@
 package com.example.mobilesafe;
 
+
+import com.example.mobilesafe.receiver.MyAdmin;
+
 import android.app.Activity;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +19,7 @@ public class LostFindActivity extends Activity {
 	private SharedPreferences sp;
 	private TextView tv_safenumber;
 	private TextView tv_protecting;
+	private TextView tv_shebei;
 	private ImageView iv_protecting;
 	
 	@Override
@@ -26,10 +33,22 @@ public class LostFindActivity extends Activity {
 			setContentView(R.layout.activity_lost_find);
 			tv_safenumber=(TextView) findViewById(R.id.tv_safenumber);
 			tv_protecting=(TextView) findViewById(R.id.tv_protecting);
+			tv_shebei=(TextView) findViewById(R.id.tv_shebei);
 			iv_protecting=(ImageView) findViewById(R.id.iv_protecting);
 			//得到设置过的安全号码
 			String safeNumber=sp.getString("safenumber", "");
 			tv_safenumber.setText(safeNumber);
+			
+			//设备管理是否开启
+			DevicePolicyManager	dpm=(DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+			ComponentName shebeiguanli=new ComponentName(this,MyAdmin.class);
+			//判断是不是管理员
+			if(dpm.isAdminActive(shebeiguanli)){
+				tv_shebei.setText("设备管理已开启");
+			}else{
+				tv_shebei.setText("打开设备管理");
+			}
+			
 			//根据防盗保护状态设置图片
 			boolean protecting=sp.getBoolean("protecting", false);
 			if(protecting){
@@ -67,7 +86,21 @@ public class LostFindActivity extends Activity {
 		//关闭当前页
 		finish();
 	}
-	
-	
+	/**
+	 * 打开设备管理
+	 * @param view
+	 */
+	public void openAdmin(View view){
+		//创建一个Intent
+		Intent intent=new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+		//要激活谁
+		ComponentName mDeviceAdminSample=new ComponentName(this,MyAdmin.class);
+		
+		intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN,mDeviceAdminSample);
+		//劝说用户开启管理员权限
+		intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,"开启锁屏,用于远程锁屏。");
+		startActivity(intent);
+		
+	}
 	
 }

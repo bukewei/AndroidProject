@@ -32,7 +32,7 @@ public class SMSReceiver extends BroadcastReceiver {
 			//取出安全号码
 			String safenumber=sp.getString("safenumber","");
 //			Log.i(TAG, "-----发送者------"+sender);
-			Toast.makeText(context, "-----发送者------"+sender, 0).show();
+//			Toast.makeText(context, "-----发送者------"+sender, 0).show();
 			//获取短信内容
 			String body=sms.getMessageBody();
 			//如果发送者的号码里包含保存的安全号码
@@ -69,12 +69,13 @@ public class SMSReceiver extends BroadcastReceiver {
 					abortBroadcast();
 				}else if ("#*wipedata*#".equals(body)) {
 					Log.i(TAG, "----远程清楚手机数据------");
+					LockScreen.wipeData(context);
 					
 					//终止广播
 					abortBroadcast();
 				}else if ("#*lockscreen*#".equals(body)) {
 					Log.i(TAG, "----远程锁屏------");
-					
+					LockScreen.lockscreen(context);
 					//终止广播
 					abortBroadcast();
 				}
