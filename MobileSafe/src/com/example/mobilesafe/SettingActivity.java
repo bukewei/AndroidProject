@@ -1,8 +1,11 @@
 package com.example.mobilesafe;
 
+import com.example.mobilesafe.service.AddressService;
 import com.example.mobilesafe.ui.SettingItemView;
+import com.example.mobilesafe.utils.ServiceUtils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -12,7 +15,28 @@ import android.view.View.OnClickListener;
 public class SettingActivity extends Activity {
 
 	private SettingItemView siv_update;
+	private SettingItemView siv_show_address;
+	private Intent showAddress;
 	private SharedPreferences sp;
+	
+	/**
+	 * 重新开启Activity
+	 */
+	@Override
+	protected void onResume() {
+		// TODO 自动生成的方法存根
+		super.onResume();
+		showAddress=new Intent(this,AddressService.class);
+		boolean isServiceRunning=ServiceUtils.isServiceRunning(SettingActivity.this,"com.example.mobilesafe.service.AddressService");
+		if(isServiceRunning){
+			//服务是开启状态
+			siv_show_address.setChecked(true);
+		}else{
+			//服务是关闭状态
+			siv_show_address.setChecked(false);
+		}
+	}
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +46,8 @@ public class SettingActivity extends Activity {
 		
 		sp=getSharedPreferences("config",MODE_PRIVATE);
 		siv_update=(SettingItemView) findViewById(R.id.siv_update);
+		siv_show_address=(SettingItemView) findViewById(R.id.siv_show_address);
+		
 		
 		boolean update=sp.getBoolean("update", false);
 		if(update){
@@ -59,6 +85,37 @@ public class SettingActivity extends Activity {
 			}
 		});
 		
+		
+		showAddress=new Intent(this,AddressService.class);
+		boolean isServiceRunning=ServiceUtils.isServiceRunning(SettingActivity.this,"com.example.mobilesafe.service.AddressService");
+		if(isServiceRunning){
+			//服务是开启状态
+			siv_show_address.setChecked(true);
+		}else{
+			//服务是关闭状态
+			siv_show_address.setChecked(false);
+		}
+		//点击事件
+		siv_show_address.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(siv_show_address.isChecked()){
+					//变为非选中状态
+					siv_show_address.setChecked(false);
+					stopService(showAddress);
+				}else{
+					//变为选中状态
+					siv_show_address.setChecked(true);
+					startService(showAddress);
+				}
+			}
+		});
+		
+		
 	}
+	
+	
+	
 	
 }
