@@ -1,10 +1,14 @@
 package com.example.mobilesafe;
 
 import com.example.mobilesafe.service.AddressService;
+import com.example.mobilesafe.ui.SettingClickView;
 import com.example.mobilesafe.ui.SettingItemView;
 import com.example.mobilesafe.utils.ServiceUtils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -18,6 +22,8 @@ public class SettingActivity extends Activity {
 	private SettingItemView siv_show_address;
 	private Intent showAddress;
 	private SharedPreferences sp;
+	
+	private SettingClickView scv_changebg;
 	
 	/**
 	 * 重新开启Activity
@@ -46,7 +52,7 @@ public class SettingActivity extends Activity {
 		
 		sp=getSharedPreferences("config",MODE_PRIVATE);
 		siv_update=(SettingItemView) findViewById(R.id.siv_update);
-		siv_show_address=(SettingItemView) findViewById(R.id.siv_show_address);
+		
 		
 		
 		boolean update=sp.getBoolean("update", false);
@@ -85,7 +91,8 @@ public class SettingActivity extends Activity {
 			}
 		});
 		
-		
+		//设置号码归属地显示控件
+		siv_show_address=(SettingItemView) findViewById(R.id.siv_show_address);
 		showAddress=new Intent(this,AddressService.class);
 		boolean isServiceRunning=ServiceUtils.isServiceRunning(SettingActivity.this,"com.example.mobilesafe.service.AddressService");
 		if(isServiceRunning){
@@ -111,6 +118,45 @@ public class SettingActivity extends Activity {
 				}
 			}
 		});
+		
+		//设置号码归属地的背景
+		scv_changebg=(SettingClickView) findViewById(R.id.scv_changebg);
+		//设置标题
+		scv_changebg.setTitle("归属地提示框风格");
+		final String[] items={"半透明","活力橙","卫士蓝","金属灰","苹果绿"};
+		int which=sp.getInt("which",0);
+		//设置描述信息
+		scv_changebg.setDesc(items[which]);
+		scv_changebg.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int dd=sp.getInt("which",0);
+				//弹出一个对话框
+				AlertDialog.Builder builder=new Builder(SettingActivity.this);
+				builder.setTitle("归属地提示框风格");
+				builder.setSingleChoiceItems(items, dd, new DialogInterface.OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// 保存选择参数
+						Editor editor=sp.edit();
+						editor.putInt("which",which);
+						editor.commit();
+						scv_changebg.setDesc(items[which]);
+						//取消对话框
+						dialog.dismiss();
+					}
+					
+				});
+				builder.setNegativeButton("cancel",null);
+				builder.show();
+			}
+		});
+		
+		
+		
+		
 		
 		
 	}

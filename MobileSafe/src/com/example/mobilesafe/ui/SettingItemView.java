@@ -37,7 +37,7 @@ public class SettingItemView extends RelativeLayout {
 		return cb_status.isChecked();
 	}
 	/**
-	 * 设置组合空间是否选中
+	 * 设置组合控件是否选中
 	 * @param checked
 	 */
 	public void setChecked(boolean checked) {

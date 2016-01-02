@@ -16,6 +16,7 @@
         android:textSize="22sp" />
 
     <!-- 自定义属性：在values文件夹下的attr.xml文件里定义 -->
+
     <com.example.mobilesafe.ui.SettingItemView
         android:id="@+id/siv_update"
         android:layout_width="wrap_content"
@@ -31,5 +32,10 @@
         itheima:desc_off="来电归属地已关闭"
         itheima:desc_on="来电归属地以开启"
         itheima:title="设置显示来电归属地" />
+
+    <com.example.mobilesafe.ui.SettingClickView
+        android:id="@+id/scv_changebg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
