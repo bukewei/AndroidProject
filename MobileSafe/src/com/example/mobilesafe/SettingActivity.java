@@ -149,7 +149,7 @@ public class SettingActivity extends Activity {
 					}
 					
 				});
-				builder.setNegativeButton("cancel",null);
+				builder.setNegativeButton("取消",null);
 				builder.show();
 			}
 		});
