@@ -1,6 +1,7 @@
 package com.example.mobilesafe;
 
 import com.example.mobilesafe.service.AddressService;
+import com.example.mobilesafe.service.CallSSmsSafeService;
 import com.example.mobilesafe.ui.SettingClickView;
 import com.example.mobilesafe.ui.SettingItemView;
 import com.example.mobilesafe.utils.ServiceUtils;
@@ -17,13 +18,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 public class SettingActivity extends Activity {
-
+	//自动更新设置
 	private SettingItemView siv_update;
 	private SettingItemView siv_show_address;
 	private Intent showAddress;
 	private SharedPreferences sp;
-	
+	//来电归属地
 	private SettingClickView scv_changebg;
+	//黑名单拦截设置
+	private SettingItemView siv_callsms_safe;
+	private Intent callSmsSafeIntent;
+	
 	
 	/**
 	 * 重新开启Activity
@@ -41,6 +46,11 @@ public class SettingActivity extends Activity {
 			//服务是关闭状态
 			siv_show_address.setChecked(false);
 		}
+		
+		//黑名单拦截服务是否运行
+		boolean isCallSmsServiceRunning=ServiceUtils.isServiceRunning(SettingActivity.this,"com.example.mobilesafe.service.CallSSmsSafeService");
+		siv_callsms_safe.setChecked(isCallSmsServiceRunning);
+		
 	}
 	
 	
@@ -154,8 +164,29 @@ public class SettingActivity extends Activity {
 			}
 		});
 		
+		//黑名单拦截服务是否运行
+		siv_callsms_safe=(SettingItemView) findViewById(R.id.siv_callsms_safe);
+		boolean isCallSmsServiceRunning=ServiceUtils.isServiceRunning(SettingActivity.this,"com.example.mobilesafe.service.CallSSmsSafeService");
+		siv_callsms_safe.setChecked(isCallSmsServiceRunning);
+		//黑名单拦截设置
 		
-		
+		callSmsSafeIntent=new Intent(this,CallSSmsSafeService.class);
+		siv_callsms_safe.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(siv_callsms_safe.isChecked()){
+					//变为非选中
+					siv_callsms_safe.setChecked(false);
+					stopService(callSmsSafeIntent);
+				}else{
+					//变为选中状态
+					siv_callsms_safe.setChecked(true);
+					startService(callSmsSafeIntent);
+				}
+				
+			}
+		});
 		
 		
 		

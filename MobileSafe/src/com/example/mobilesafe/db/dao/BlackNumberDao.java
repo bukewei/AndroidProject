@@ -35,7 +35,7 @@ public class BlackNumberDao {
 		boolean result=false;
 		//获取一个可写的数据库
 		SQLiteDatabase db=helper.getReadableDatabase();
-		Cursor cursor=db.rawQuery("SELECT * FROM blacknumber WWHERE number=?",new String[]{number});
+		Cursor cursor=db.rawQuery("SELECT * FROM blacknumber WHERE number=?",new String[]{number});
 		if(cursor.moveToNext()){
 			result=true;
 		}
@@ -52,7 +52,7 @@ public class BlackNumberDao {
 		String result=null;
 		//获取一个可写的数据库
 		SQLiteDatabase db=helper.getReadableDatabase();
-		Cursor cursor=db.rawQuery("SELECT mode FROM blacknumber WWHERE number=?",new String[]{number});
+		Cursor cursor=db.rawQuery("SELECT mode FROM blacknumber WHERE number=?",new String[]{number});
 		if(cursor.moveToNext()){
 			result=cursor.getString(0);
 		}
