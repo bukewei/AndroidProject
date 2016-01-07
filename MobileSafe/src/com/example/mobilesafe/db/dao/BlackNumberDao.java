@@ -27,6 +27,37 @@ public class BlackNumberDao {
 		helper=new BlackNumberDBOpenHelper(context);
 	}
 	/**
+	 * 查询部分黑名单号码
+	 * @param offset    从那个位置开始
+	 * @param maxnumber 一次最多获取多少条记录
+	 * @return  返回BlackNumberInfo对象集合
+	 */
+	public List<BlackNumberInfo> findPart(int offset,int maxnumber){
+		try {
+			//睡眠500毫秒
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		List<BlackNumberInfo> result=new ArrayList<BlackNumberInfo>();
+		SQLiteDatabase db=helper.getReadableDatabase();
+		String sql="SELECT number,mode FROM blacknumber ORDER BY _id DESC LIMIT ? OFFSET ?";
+		Cursor cursor=db.rawQuery(sql,new String[]{String.valueOf(maxnumber),String.valueOf(offset)});
+		while(cursor.moveToNext()){
+			BlackNumberInfo info=new BlackNumberInfo();
+			String number=cursor.getString(cursor.getColumnIndex("number"));
+			String mode=cursor.getString(cursor.getColumnIndex("mode"));
+			info.setMode(mode);
+			info.setNumber(number);
+			result.add(info);
+		}
+		cursor.close();
+		db.close();
+		return result;
+	}
+	
+	
+	/**
 	 *  插询黑名单号码是否存在
 	 * @param number  号码
 	 * @return   存在返回真，反之返回假
