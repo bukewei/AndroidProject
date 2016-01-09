@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.mobilesafe.domain.AppInfo;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -26,11 +27,29 @@ public class AppInfoProvider {
 		List<PackageInfo> packageInfos=pm.getInstalledPackages(0);
 		List<AppInfo> appInfos=new ArrayList<AppInfo>();
 		for(PackageInfo packageInfo : packageInfos){
+			AppInfo appInfo=new AppInfo();
 			//packageInfo 相当于一个应用程序apk包的清单文件
 			String packname=packageInfo.packageName;
 			Drawable icon=packageInfo.applicationInfo.loadIcon(pm);
 			String name=packageInfo.applicationInfo.loadLabel(pm).toString();
-			AppInfo appInfo=new AppInfo();
+			//应用程序的标记  相当于用户提交的答卷
+			int flags=packageInfo.applicationInfo.flags;
+			if((flags & ApplicationInfo.FLAG_SYSTEM)==0){
+				//用户程序
+				appInfo.setUserApp(true);
+			}else{
+				//系统程序
+				appInfo.setUserApp(false);
+			}
+			
+			if((flags & ApplicationInfo.FLAG_EXTERNAL_STORAGE) == 0){
+				//安装手机的内存
+				appInfo.setInRom(true);
+			}else{
+				//安装在手机的外部存储设备
+				appInfo.setInRom(false);
+			}
+			
 			appInfo.setPackname(packname);
 			appInfo.setIcon(icon);
 			appInfo.setAppname(name);
