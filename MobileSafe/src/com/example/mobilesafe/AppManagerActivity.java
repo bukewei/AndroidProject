@@ -115,13 +115,15 @@ public class AppManagerActivity extends Activity {
 				appInfo=userAppInfos.get(newposition);
 			}else{
 				//显示系统程序
-				int newposition=position-1-userAppInfos.size()-1;//减去除了系统程序的所有item
+				//减去除了系统程序的所有item  得到在systemAppInfos里的位置
+				int newposition=position-1-userAppInfos.size()-1;
 				appInfo=systemAppInfos.get(newposition);
 			}
 			
 			
 			View view;
 			ViewHolder holder;
+			//convertView不为空，并且是一个相对布局
 			if(convertView != null && convertView instanceof RelativeLayout){
 				//有旧的view对象    还要判断是否是合适的类型去复用
 				view=convertView;

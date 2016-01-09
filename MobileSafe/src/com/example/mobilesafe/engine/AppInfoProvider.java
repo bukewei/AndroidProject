@@ -32,8 +32,9 @@ public class AppInfoProvider {
 			String packname=packageInfo.packageName;
 			Drawable icon=packageInfo.applicationInfo.loadIcon(pm);
 			String name=packageInfo.applicationInfo.loadLabel(pm).toString();
-			//应用程序的标记  相当于用户提交的答卷
+			//应用程序的标记  
 			int flags=packageInfo.applicationInfo.flags;
+			//不同的数相与等于0
 			if((flags & ApplicationInfo.FLAG_SYSTEM)==0){
 				//用户程序
 				appInfo.setUserApp(true);

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mobilesafe"
+	android:installLocation="preferExternal"
     android:versionCode="1"
     android:versionName="1.0" >
-
+<!--android:installLocation="preferExternal" 尽可能的安装在SD卡上 -->
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="17" />
