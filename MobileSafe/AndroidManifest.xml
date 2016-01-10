@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mobilesafe"
-	android:installLocation="preferExternal"
+    android:installLocation="preferExternal"
     android:versionCode="1"
     android:versionName="1.0" >
-<!--android:installLocation="preferExternal" 尽可能的安装在SD卡上 -->
+	<!-- android:installLocation="preferExternal" 尽可能的安装在SD卡上 -->
+    
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="17" />
@@ -12,32 +13,31 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 接收开机广播权限 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <!-- 位置权限 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
-    
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:targetPackage="com.example.mobilesafe" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
-    <uses-permission android:name="android.permission.WRITE_CALL_LOG"/>
-    <uses-permission android:name="android.permission.WRITE_SMS"/>
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
-    
-    
+
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
@@ -64,41 +64,43 @@
         <activity android:name="com.example.mobilesafe.NumberAddressQueryActivity" />
         <activity android:name="com.example.mobilesafe.CallSmsSafeActivity" />
         <activity android:name="com.example.mobilesafe.AppManagerActivity" />
-        
-        <receiver 
-            android:name="com.example.mobilesafe.receiver.BootCompleteReceiver">
+
+        <receiver android:name="com.example.mobilesafe.receiver.BootCompleteReceiver" >
             <intent-filter>
+
                 <!-- 接收开机广播 -->
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-   		<receiver 
-            android:name="com.example.mobilesafe.receiver.SMSReceiver">
-            <intent-filter android:priority="2147483647">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+        <receiver android:name="com.example.mobilesafe.receiver.SMSReceiver" >
+            <intent-filter android:priority="2147483647" >
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
         <!-- 获取位置的服务 -->
-        <service android:name="com.example.mobilesafe.service.GPSService"></service>
+        <service android:name="com.example.mobilesafe.service.GPSService" >
+        </service>
         <!-- 来电归属地服务 -->
-        <service android:name="com.example.mobilesafe.service.AddressService"></service>
+        <service android:name="com.example.mobilesafe.service.AddressService" >
+        </service>
         <!-- 黑名单拦截服务 -->
-        <service android:name="com.example.mobilesafe.service.CallSSmsSafeService"></service>
-        
+        <service android:name="com.example.mobilesafe.service.CallSSmsSafeService" >
+        </service>
+
         <!-- 注册设备管理 -->
-        <receiver 
+        <receiver
             android:name="com.example.mobilesafe.receiver.MyAdmin"
             android:description="@string/sample_device_admin_description"
             android:label="@string/sample_device_admin"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data 
+            android:permission="android.permission.BIND_DEVICE_ADMIN" >
+            <meta-data
                 android:name="android.app.device_admin"
-                android:resource="@xml/device_admin_sample"/>
+                android:resource="@xml/device_admin_sample" />
+
             <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
-        
     </application>
 
 </manifest>

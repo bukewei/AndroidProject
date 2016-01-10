@@ -1,6 +1,5 @@
 package com.example.mobilesafe;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import com.example.mobilesafe.domain.AppInfo;
 import com.example.mobilesafe.engine.AppInfoProvider;
 
 import android.app.Activity;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +14,8 @@ import android.os.StatFs;
 import android.text.format.Formatter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,6 +37,8 @@ public class AppManagerActivity extends Activity {
 	private List<AppInfo> userAppInfos;
 	//系统应用程序集合
 	private List<AppInfo> systemAppInfos;
+	//当前程序信息的状态
+	private TextView tv_status;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class AppManagerActivity extends Activity {
 		
 		tv_avail_rom=(TextView) findViewById(R.id.tv_avail_rom);
 		tv_avail_sd=(TextView) findViewById(R.id.tv_avail_sd);
+		tv_status=(TextView) findViewById(R.id.tv_status);
 		//得到SD卡可用空间大小
 		long SdSize=getAvailSpace(Environment.getExternalStorageDirectory().getAbsolutePath());
 		//得到内存可用大小
@@ -82,6 +85,32 @@ public class AppManagerActivity extends Activity {
 				});
 			};
 		}.start();
+		
+		//给listview注册一个滚动监听器
+		lv_app_manager.setOnScrollListener(new OnScrollListener() {
+			/**
+			 * 滚动状态改变
+			 */
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				
+			}
+			/**
+			 * 滚动的时候调用
+			 */
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				// firstVisibleItem：第一个可见条目在listview集合的
+				if(userAppInfos != null && systemAppInfos != null){
+					if(firstVisibleItem > userAppInfos.size()){
+						tv_status.setText("系统程序："+systemAppInfos.size()+"个");
+					}else{
+						tv_status.setText("用户程序："+userAppInfos.size()+"个");
+					}
+				}
+				
+			}
+		});
 		
 	}
 	
