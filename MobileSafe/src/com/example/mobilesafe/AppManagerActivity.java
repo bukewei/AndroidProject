@@ -5,21 +5,31 @@ import java.util.List;
 
 import com.example.mobilesafe.domain.AppInfo;
 import com.example.mobilesafe.engine.AppInfoProvider;
+import com.example.mobilesafe.utils.DensityUtil;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.format.Formatter;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,6 +49,10 @@ public class AppManagerActivity extends Activity {
 	private List<AppInfo> systemAppInfos;
 	//当前程序信息的状态
 	private TextView tv_status;
+	/**
+	 * 弹出的悬浮窗体
+	 */
+	private PopupWindow popupWindow;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +114,9 @@ public class AppManagerActivity extends Activity {
 			 */
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				
+				dismissPopupWindow();
+				
 				// firstVisibleItem：第一个可见条目在listview集合的
 				if(userAppInfos != null && systemAppInfos != null){
 					if(firstVisibleItem > userAppInfos.size()){
@@ -111,11 +128,66 @@ public class AppManagerActivity extends Activity {
 				
 			}
 		});
+		/**
+		 * 设置listview的点击事件
+		 */
+		lv_app_manager.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				AppInfo appInfo;
+				if(position == 0){
+					return;
+				}else if(position==(userAppInfos.size()+1)){
+					return;
+				}else{
+					if(position<=userAppInfos.size()+1){
+						//点击的是用户程序
+						int newposition=position-1;
+						appInfo=userAppInfos.get(newposition);
+					}else{
+						//点击的是系统程序
+						int newposition=position-1-userAppInfos.size()-1;
+						appInfo=systemAppInfos.get(newposition);
+					}
+					
+					dismissPopupWindow();
+					
+//					TextView contentView=new TextView(AppManagerActivity.this);
+//					contentView.setText(appInfo.getPackname());
+//					contentView.setTextColor(Color.BLACK);
+					View contentView=View.inflate(AppManagerActivity.this,R.layout.popu_app_item, null);
+					//-2：代表包裹内容
+					popupWindow=new PopupWindow(contentView,-2,-2);
+					//动画效果的播放要求窗体必须有背景色
+					//设置背景资源      设置为透明
+					popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+					int[] location=new int[2];
+					//获取view在窗口的位置
+					view.getLocationInWindow(location);
+					//在代码里面设置的宽和高 都是像素单位   在这里为了适配不同分辨率需要转换成  dip  （dp是dip的简写）
+					int dipX=DensityUtil.px2dip(AppManagerActivity.this,location[0]+100);
+					//设置显示位置     parent父控件      显示在左上角
+					popupWindow.showAtLocation(parent, Gravity.LEFT | Gravity.TOP,dipX,location[1]);
+					
+					ScaleAnimation sa=new ScaleAnimation(0.3f,1.0f,0.3f,1.0f,Animation.RELATIVE_TO_SELF,0,Animation.RELATIVE_TO_SELF,0.5f);
+					sa.setDuration(300);//持续时间
+					AlphaAnimation aa=new AlphaAnimation(0.5f,1.0f);
+					aa.setDuration(300);
+					AnimationSet set=new AnimationSet(false);
+					set.addAnimation(aa);
+					set.addAnimation(sa);
+					contentView.startAnimation(set);
+				}
+				
+			}
+			
+		});
 		
 	}
 	
 	private class AppManagerAdapter extends BaseAdapter{
-
+		//控制listview的条目多少
 		@Override
 		public int getCount() {
 			// TODO 自动生成的方法存根
@@ -222,5 +294,23 @@ public class AppManagerActivity extends Activity {
 		//返回可用空间大小
 		return size*count;
 	}
+	
+	/**
+	 * 把旧的弹出窗体关闭
+	 */
+	private void dismissPopupWindow(){
+		//不为空，并且是显示状态
+		if(popupWindow != null && popupWindow.isShowing()){
+			popupWindow.dismiss();//关闭
+			popupWindow=null;
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		dismissPopupWindow();
+		super.onDestroy();
+	}
+	
 	
 }

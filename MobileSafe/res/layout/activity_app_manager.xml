@@ -58,11 +58,14 @@
                 android:layout_height="wrap_content"
                 android:text="加载数据中..." />
         </LinearLayout>
-
+        <!-- fastScrollEnabled="true"：可以快速滚动 -->
+        <!-- overScrollMode="never"：不过度滚动 -->
         <ListView
             android:id="@+id/lv_app_manager"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent"
+            android:fastScrollEnabled="true"
+            android:overScrollMode="never" >
         </ListView>
 
         <TextView

@@ -3,7 +3,6 @@ package com.example.mobilesafe;
 import com.example.mobilesafe.db.dao.NumberAddressQueryUtils;
 
 import android.app.Activity;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.Editable;

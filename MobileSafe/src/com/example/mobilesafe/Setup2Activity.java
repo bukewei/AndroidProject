@@ -3,7 +3,6 @@ package com.example.mobilesafe;
 import com.example.mobilesafe.ui.SettingItemView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
