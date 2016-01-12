@@ -3,6 +3,7 @@ package com.example.mobilesafe.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.mobilesafe.R;
 import com.example.mobilesafe.domain.TaskInfo;
 
 import android.app.ActivityManager;
@@ -53,6 +54,8 @@ public class TaskInfoProvider {
 			} catch (NameNotFoundException e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();
+				taskInfo.setIcon(context.getResources().getDrawable(R.drawable.ic_default));
+				taskInfo.setName(packname);
 			}
 			taskInfos.add(taskInfo);
 		}

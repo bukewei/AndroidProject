@@ -36,8 +36,9 @@
     </RelativeLayout>
 
     <!-- 帧布局 -->
-
+	<!-- touch.orientationAware 数值越大优先级越低 -->
     <FrameLayout
+        android:layout_weight="9999"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
@@ -47,7 +48,7 @@
             android:layout_height="fill_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="invisible" >
+            android:visibility="invisible" ><!-- invisible：不可见 -->
 
             <ProgressBar
                 android:layout_width="wrap_content"
@@ -77,5 +78,35 @@
             android:text="用户程序0个"
             android:textColor="#ffffff" />
     </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <Button 
+            android:onClick="selectAll"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="全选"/>
+        <Button 
+            android:onClick="selectOppo"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="反选"/>
+         <Button 
+            android:onClick="killAll"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="清理"/>
+          <Button 
+            android:onClick="enterSetting"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="设置"/>
+    </LinearLayout>
 
 </LinearLayout>
