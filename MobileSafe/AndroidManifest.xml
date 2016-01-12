@@ -78,6 +78,7 @@
         <activity android:name="com.example.mobilesafe.CallSmsSafeActivity" />
         <activity android:name="com.example.mobilesafe.AppManagerActivity" />
         <activity android:name="com.example.mobilesafe.TaskManagerActivity" />
+        <activity android:name="com.example.mobilesafe.TaskSettingActivity" />
 
         <receiver android:name="com.example.mobilesafe.receiver.BootCompleteReceiver" >
             <intent-filter>
@@ -91,15 +92,33 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+        <!-- 窗口小部件 -->
+        <receiver 
+            android:name="com.example.mobilesafe.receiver.MyWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data 
+                android:name="android.appwidget.provider"
+                android:resource="@xml/process_widget_provider"/>
+        </receiver>
+        <receiver 
+            android:name="com.example.mobilesafe.receiver.KillAllRecevier">
+            <intent-filter>
+                <action android:name="com.example.mobilesafe.killall"/>
+            </intent-filter>
+        </receiver>
+        
         <!-- 获取位置的服务 -->
-        <service android:name="com.example.mobilesafe.service.GPSService" >
-        </service>
+        <service android:name="com.example.mobilesafe.service.GPSService" />
         <!-- 来电归属地服务 -->
-        <service android:name="com.example.mobilesafe.service.AddressService" >
-        </service>
+        <service android:name="com.example.mobilesafe.service.AddressService" />
         <!-- 黑名单拦截服务 -->
-        <service android:name="com.example.mobilesafe.service.CallSSmsSafeService" >
-        </service>
+        <service android:name="com.example.mobilesafe.service.CallSSmsSafeService" />
+        <!-- 锁屏清理 -->
+        <service android:name="com.example.mobilesafe.service.AutoCleanService" />
+        <!-- 窗口小部件 服务-->
+        <service android:name="com.example.mobilesafe.service.UpdateWidgetService" />
 
         <!-- 注册设备管理 -->
         <receiver

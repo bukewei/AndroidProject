@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 更新间隔最短半小时   1800000毫秒-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="294.0dip"
+    android:minHeight="50.0dip"
+    android:updatePeriodMillis="1800000"
+    android:initialLayout="@layout/process_widget" />

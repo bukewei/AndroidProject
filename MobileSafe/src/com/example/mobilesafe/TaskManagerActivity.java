@@ -325,11 +325,12 @@ public class TaskManagerActivity extends Activity {
 
 	}
 	/**
-	 * 进入设置
+	 * 进入设置界面
 	 * @param view
 	 */
 	public void enterSetting(View view){
-		
+		Intent intent=new Intent(TaskManagerActivity.this,TaskSettingActivity.class);
+		startActivityForResult(intent, 0);
 	}
 	
 	@Override
