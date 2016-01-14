@@ -3,6 +3,7 @@ package com.example.mobilesafe;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.mobilesafe.db.dao.ApplockDao;
 import com.example.mobilesafe.domain.AppInfo;
 import com.example.mobilesafe.engine.AppInfoProvider;
 import com.example.mobilesafe.utils.DensityUtil;
@@ -30,6 +31,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -79,11 +81,15 @@ public class AppManagerActivity extends Activity implements OnClickListener{
 	
 	private AppManagerAdapter adapter;
 	
+	private ApplockDao dao;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO 自动生成的方法存根
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app_manager);
+		
+		dao=new ApplockDao(this);
 		
 		tv_avail_rom=(TextView) findViewById(R.id.tv_avail_rom);
 		tv_avail_sd=(TextView) findViewById(R.id.tv_avail_sd);
@@ -191,6 +197,44 @@ public class AppManagerActivity extends Activity implements OnClickListener{
 			}
 			
 		});
+		/**
+		 * 程序锁 设置条目长点击的事件监听器
+		 */
+		lv_app_manager.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				if(position == 0){
+					return true;
+				}else if(position==(userAppInfos.size()+1)){
+					return true;
+				}else{
+					if(position<=userAppInfos.size()+1){
+						//点击的是用户程序
+						int newposition=position-1;
+						appInfo=userAppInfos.get(newposition);
+					}else{
+						//点击的是系统程序
+						int newposition=position-1-userAppInfos.size()-1;
+						appInfo=systemAppInfos.get(newposition);
+					}
+				}
+				
+				ViewHolder holder=(ViewHolder) view.getTag();
+				//判断条目是否在程序锁的数据库里
+				if(dao.find(appInfo.getPackname())){
+					//被锁定的程序  解除锁定  更新界面为打开的小锁图片
+					dao.delete(appInfo.getPackname());
+					holder.iv_status.setImageResource(R.drawable.unlock);
+				}else{
+					//锁定程序  更新界面为关闭的锁
+					dao.add(appInfo.getPackname());
+					holder.iv_status.setImageResource(R.drawable.lock);
+				}
+				
+				return true;
+			}
+		});
+		
 		
 	}
 
@@ -277,6 +321,7 @@ public class AppManagerActivity extends Activity implements OnClickListener{
 				holder.iv_icon=(ImageView) view.findViewById(R.id.iv_app_icon);
 				holder.tv_location=(TextView) view.findViewById(R.id.tv_app_location);
 				holder.tv_name=(TextView) view.findViewById(R.id.tv_app_name);
+				holder.iv_status=(ImageView) view.findViewById(R.id.iv_status);
 				view.setTag(holder);
 			}
 	//		appInfo=appInfos.get(position);
@@ -289,6 +334,12 @@ public class AppManagerActivity extends Activity implements OnClickListener{
 				holder.tv_location.setText("手机内存");
 			}else{
 				holder.tv_location.setText("外部存储");
+			}
+			//是否开启程序锁
+			if(dao.find(appInfo.getPackname())){
+				holder.iv_status.setImageResource(R.drawable.lock);
+			}else{
+				holder.iv_status.setImageResource(R.drawable.unlock);
 			}
 			return view;
 		}
@@ -315,6 +366,7 @@ public class AppManagerActivity extends Activity implements OnClickListener{
 		public TextView tv_name;//名字
 		public TextView tv_location;//位置
 		public ImageView iv_icon;//图标
+		public ImageView iv_status;
 	}
 	
 	/**

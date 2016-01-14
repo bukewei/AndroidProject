@@ -45,5 +45,12 @@
         itheima:desc_off="黑名单拦截已关闭"
         itheima:desc_on="黑名单拦截已开启"
         itheima:title="黑名单拦截设置" />
+    <com.example.mobilesafe.ui.SettingItemView
+        android:id="@+id/siv_watchdog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        itheima:desc_off="看门狗已关闭"
+        itheima:desc_on="看门狗已开启"
+        itheima:title="程序锁设置" />
 
 </LinearLayout>

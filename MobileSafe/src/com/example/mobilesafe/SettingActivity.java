@@ -2,6 +2,7 @@ package com.example.mobilesafe;
 
 import com.example.mobilesafe.service.AddressService;
 import com.example.mobilesafe.service.CallSSmsSafeService;
+import com.example.mobilesafe.service.WatchDogService;
 import com.example.mobilesafe.ui.SettingClickView;
 import com.example.mobilesafe.ui.SettingItemView;
 import com.example.mobilesafe.utils.ServiceUtils;
@@ -28,7 +29,9 @@ public class SettingActivity extends Activity {
 	//黑名单拦截设置
 	private SettingItemView siv_callsms_safe;
 	private Intent callSmsSafeIntent;
-	
+	//程序锁设置
+	private SettingItemView siv_watchdog;
+	private Intent watchDogIntent;
 	
 	/**
 	 * 重新开启Activity
@@ -50,6 +53,9 @@ public class SettingActivity extends Activity {
 		//黑名单拦截服务是否运行
 		boolean isCallSmsServiceRunning=ServiceUtils.isServiceRunning(SettingActivity.this,"com.example.mobilesafe.service.CallSSmsSafeService");
 		siv_callsms_safe.setChecked(isCallSmsServiceRunning);
+		//程序锁是否运行
+		boolean isRunning=ServiceUtils.isServiceRunning(SettingActivity.this,"com.example.mobilesafe.service.WatchDogService");
+		siv_watchdog.setChecked(isRunning);
 		
 	}
 	
@@ -188,7 +194,27 @@ public class SettingActivity extends Activity {
 			}
 		});
 		
+		//程序锁设置
+		siv_watchdog=(SettingItemView) findViewById(R.id.siv_watchdog);
+		//程序锁是否运行
+		boolean isRunning=ServiceUtils.isServiceRunning(SettingActivity.this,"com.example.mobilesafe.service.WatchDogService");
+		siv_watchdog.setChecked(isRunning);
 		
+		watchDogIntent=new Intent(this,WatchDogService.class);
+		siv_watchdog.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(siv_watchdog.isChecked()){
+					//变为非选中状态
+					siv_watchdog.setChecked(false);
+					stopService(watchDogIntent);
+				}else{
+					//变为选中状态
+					siv_watchdog.setChecked(true);
+					startService(watchDogIntent);
+				}
+			}
+		});
 		
 	}
 	
