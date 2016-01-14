@@ -82,7 +82,8 @@
         <activity android:name="com.example.mobilesafe.TaskSettingActivity" />
         <activity android:name="com.example.mobilesafe.TrafficManagerActivity" />
         <!-- 杀毒界面 -->
-        <activity android:name="com.example.mobilesafe.AntiVirusActivity" />
+        <activity android:name="com.example.mobilesafe.AntiVirusActivity" 
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
         
         <activity android:name="com.example.mobilesafe.EnterPwdActivity" 
             android:launchMode="singleInstance"

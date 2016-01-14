@@ -53,6 +53,8 @@ public class AppInfoProvider {
 			//应用程序信息的标记
 			int uid=packageInfo.applicationInfo.uid;
 			//操作系统分配给应用系统的一个固定的编号。一旦应用程序被装到手机 id就固定不变了。
+//			File rcvfile = new File("/proc/uid_stat/"+uid+"/tcp_rcv");
+//			File sndfILE = new File("/proc/uid_stat/"+uid+"/tcp_snd");
 			appInfo.setUid(uid);
 			
 			appInfo.setPackname(packname);

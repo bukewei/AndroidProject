@@ -331,9 +331,9 @@ public class AppManagerActivity extends Activity implements OnClickListener{
 			holder.tv_name.setText(appInfo.getAppname());
 			//显示安装位置
 			if(appInfo.isInRom()){
-				holder.tv_location.setText("手机内存");
+				holder.tv_location.setText("手机内存"+" uid:"+appInfo.getUid());
 			}else{
-				holder.tv_location.setText("外部存储");
+				holder.tv_location.setText("外部存储"+" uid:"+appInfo.getUid());
 			}
 			//是否开启程序锁
 			if(dao.find(appInfo.getPackname())){
