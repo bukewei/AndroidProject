@@ -80,6 +80,7 @@
         <activity android:name="com.example.mobilesafe.AppManagerActivity" />
         <activity android:name="com.example.mobilesafe.TaskManagerActivity" />
         <activity android:name="com.example.mobilesafe.TaskSettingActivity" />
+        <activity android:name="com.example.mobilesafe.TrafficManagerActivity" />
         
         <activity android:name="com.example.mobilesafe.EnterPwdActivity" 
             android:launchMode="singleInstance"

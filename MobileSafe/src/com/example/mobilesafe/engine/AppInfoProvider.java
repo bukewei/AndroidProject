@@ -44,12 +44,16 @@ public class AppInfoProvider {
 			}
 			
 			if((flags & ApplicationInfo.FLAG_EXTERNAL_STORAGE) == 0){
-				//安装手机的内存
+				//安装在手机的内存
 				appInfo.setInRom(true);
 			}else{
 				//安装在手机的外部存储设备
 				appInfo.setInRom(false);
 			}
+			//应用程序信息的标记
+			int uid=packageInfo.applicationInfo.uid;
+			//操作系统分配给应用系统的一个固定的编号。一旦应用程序被装到手机 id就固定不变了。
+			appInfo.setUid(uid);
 			
 			appInfo.setPackname(packname);
 			appInfo.setIcon(icon);
