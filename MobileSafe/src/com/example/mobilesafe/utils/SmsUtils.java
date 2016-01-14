@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;

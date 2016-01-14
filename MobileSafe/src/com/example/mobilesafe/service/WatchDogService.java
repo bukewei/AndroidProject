@@ -6,8 +6,8 @@ import com.example.mobilesafe.EnterPwdActivity;
 import com.example.mobilesafe.db.dao.ApplockDao;
 
 import android.app.ActivityManager;
-import android.app.Service;
 import android.app.ActivityManager.RunningTaskInfo;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
