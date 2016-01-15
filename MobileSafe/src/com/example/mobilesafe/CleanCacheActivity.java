@@ -1,23 +1,26 @@
 package com.example.mobilesafe;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PackageStats;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.format.Formatter;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CleanCacheActivity extends Activity {
 	
@@ -65,7 +68,7 @@ public class CleanCacheActivity extends Activity {
 					try {
 						//谁去执行，参数，包名、和回调对象
 						getPackageSizeInfoMethod.invoke(pm,packinfo.packageName,new MyDataObserver());
-						Thread.sleep(200);
+						Thread.sleep(10);
 					} catch (Exception e) {
 						// TODO 自动生成的 catch 块
 						e.printStackTrace();
@@ -92,7 +95,7 @@ public class CleanCacheActivity extends Activity {
 			final long cache=pStats.cacheSize;
 			long code=pStats.codeSize;
 			long data=pStats.dataSize;
-			String packname=pStats.packageName;
+			final String packname=pStats.packageName;
 			final ApplicationInfo appinfo;
 			try {
 				appinfo=pm.getApplicationInfo(packname, 0);
@@ -101,11 +104,31 @@ public class CleanCacheActivity extends Activity {
 					public void run() {
 						tv_scan_status.setText("正在扫描："+appinfo.loadLabel(pm));
 						if(cache > 0){
-							TextView tv=new TextView(CleanCacheActivity.this);
+							View view=View.inflate(CleanCacheActivity.this,R.layout.list_item_cacheinfo,null);
+							
+							TextView tv_cache=(TextView) view.findViewById(R.id.tv_cache_size);
 							String cacheStr=Formatter.formatFileSize(getApplicationContext(), cache);
-							tv.setText(appinfo.loadLabel(pm)+"-缓存大小:"+cacheStr);
-							tv.setTextColor(Color.BLACK);
-							ll_container.addView(tv,0);
+							tv_cache.setText("缓存大小:"+cacheStr);
+							
+							TextView tv_name=(TextView) view.findViewById(R.id.tv_app_name);
+							tv_name.setText(appinfo.loadLabel(pm));
+							
+							ImageView iv_delete=(ImageView) view.findViewById(R.id.iv_delete);
+							iv_delete.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									try {
+										Method method=PackageManager.class.getMethod("deleteApplicationCacheFiles",String.class,IPackageDataObserver.class);
+										method.invoke(pm,packname,new MypackDataObserver());
+										Toast.makeText(getApplicationContext(),"已清除",Toast.LENGTH_SHORT).show();
+									} catch (Exception e) {
+										// TODO 自动生成的 catch 块
+										e.printStackTrace();
+									}
+								}
+							});
+							
+							ll_container.addView(view,0);
 						}
 							
 					}
@@ -117,8 +140,37 @@ public class CleanCacheActivity extends Activity {
 			
 			
 		}
-		
+			
 	}
 	
+	
+	private class MypackDataObserver extends IPackageDataObserver.Stub{
+
+		@Override
+		public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
+			System.out.println(packageName+"  "+succeeded);
+		}
+	}
+	/**
+	 * 清理全部缓存
+	 * @param view
+	 */
+	public void clearAll(View view){
+		Method[] methods=PackageManager.class.getMethods();
+		for(Method method:methods){
+			if("freeStorageAndNotify".equals(method.getName())){
+				try {
+					//向系统申请很大的空间，迫使系统清理缓存
+					method.invoke(pm,Integer.MAX_VALUE,new MypackDataObserver());
+					Toast.makeText(this,"已清除",Toast.LENGTH_SHORT).show();
+				} catch (Exception e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+				return;
+			}
+			
+		}
+	}
 	
 }
