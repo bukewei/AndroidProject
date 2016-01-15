@@ -54,7 +54,7 @@ public class AntiVirusActivity extends Activity {
 				ll_scan_list.addView(tView,0);
 				break;
 			case FINISH:
-				tv_scan_status.setText("扫描完成  安全");
+				tv_scan_status.setText("扫描完成");
 				iv_scan.clearAnimation();//停止播放动画
 				break;
 			default:
@@ -95,12 +95,6 @@ public class AntiVirusActivity extends Activity {
 		new Thread(){
 			public void run(){
 				List<PackageInfo> infos=pm.getInstalledPackages(0);
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					// TODO 自动生成的 catch 块
-					e.printStackTrace();
-				}
 				progressBar1.setMax(infos.size());
 				int progress=0;
 				for(PackageInfo info:infos){
@@ -109,7 +103,8 @@ public class AntiVirusActivity extends Activity {
 					String md5=getFileMd5(sourcedir);
 					ScanInfo scanInfo=new ScanInfo();
 					scanInfo.name=info.applicationInfo.loadLabel(pm).toString();
-					System.out.println(scanInfo.packname+":"+md5);
+					scanInfo.packname=info.packageName;
+					System.out.println("sourcedir:"+sourcedir+"\n"+scanInfo.packname+":"+md5);
 					//查询md5信息，是否在病毒数据库里面存在
 					if(aDao.isVirus(md5)){
 						//发现病毒

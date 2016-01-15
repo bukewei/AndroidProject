@@ -83,7 +83,7 @@
         <activity android:name="com.example.mobilesafe.TrafficManagerActivity" />
         <!-- 杀毒界面 -->
         <activity android:name="com.example.mobilesafe.AntiVirusActivity" 
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:configChanges="orientation|keyboardHidden|screenSize"/><!--手机横竖屏切换不影响Activity-->
         
         <activity android:name="com.example.mobilesafe.EnterPwdActivity" 
             android:launchMode="singleInstance"
